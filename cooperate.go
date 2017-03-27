@@ -14,6 +14,9 @@ var (
 	// ErrDeleteMismatch indicates that an action requested to delete data that
 	// was not present in the existing document.
 	ErrDeleteMismatch = errors.New("delete mismatch")
+
+	// ErrUnknownAction indicates that an unrecognized action was provided.
+	ErrUnknownAction = errors.New("unknown action")
 )
 
 type (
@@ -27,6 +30,17 @@ type (
 	// complete iteration through a document.
 	Operation []Action
 
+	// // TODO(tylerchr): I think eventually we should use an "Operation" that looks more like this:
+	// Operation struct {
+	// 	ClientID    int       // the client who proposed this operation
+	// 	OperationID int       // the client-assigned OperationID
+	// 	AppliedTime time.Time // the timestamp the client first applied this operation
+	// 	CommitTime  time.Time // the timestamp the server committed this operation
+
+	// 	Root    int      // the Sequence Number of the server state at which this op was rooted
+	// 	Actions []Action // the enumeration of actions that form the operation
+	// }
+
 	// An Action is something that can be performed as part of an operation.
 	Action interface{}
 
@@ -38,7 +52,7 @@ type (
 	// In other words, given two operations a and b, it is expected to produce a
 	// single operation c that produces the same effect as applying a then b.
 	Composer interface {
-		Compose(a, b OperationIterator) (Operation, error)
+		Compose(a, b *OperationIterator) (Operation, error)
 	}
 
 	// A Transformer provides an application-aware implementation of the OT transform
@@ -49,7 +63,7 @@ type (
 	// Implementations of Transformer are expected to behave such that the above
 	// equality holds.
 	Transformer interface {
-		Transform(a, b OperationIterator) (aa, bb Operation, err error)
+		Transform(a, b *OperationIterator) (aa, bb Operation, err error)
 	}
 
 	// A ComposeTransformer implements the two core OT functions.
