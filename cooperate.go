@@ -17,6 +17,12 @@ var (
 )
 
 type (
+	// A Document is data that may be collaboratively edited via
+	// a series of distributed Operations.
+	Document interface {
+		Apply(Operation) error
+	}
+
 	// An Operation is a list of component actions that together define one
 	// complete iteration through a document.
 	Operation []Action
