@@ -98,7 +98,7 @@ func TestLengths(t *testing.T) {
 	}
 
 	for i, c := range cases {
-		if pre, post := lengths(c.Operation); pre != c.Before || post != c.After {
+		if pre, post := Lengths(c.Operation); pre != c.Before || post != c.After {
 			t.Errorf("[case %d] unexpected prelength: expected (%d -> %d) but got (%d -> %d)", i, c.Before, c.After, pre, post)
 		}
 	}

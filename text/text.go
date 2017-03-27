@@ -64,7 +64,7 @@ func (th TextHandler) Reduce(a, b cooperate.Action) (cooperate.Action, bool) {
 		return nil, false
 	}
 
-	// TODO(tylerc): Check the type of b, because this solution will panic on bad input.
+	// TODO(tylerchr): Check the type of b, because this solution will panic on bad input.
 
 	switch a.(type) {
 	case InsertAction:
@@ -182,7 +182,7 @@ TransformLoop:
 			}
 			break TransformLoop
 
-		// if we are at the end of b but not a, then a must contain only inserts
+		// if we are at the end of a but not b, then b must contain only inserts
 		case !a.More() && b.More():
 			if b.PeekType() == Insert {
 				aPrime = append(aPrime, RetainAction(1))
@@ -192,8 +192,8 @@ TransformLoop:
 			break TransformLoop
 
 		case a.PeekType() == Insert && b.PeekType() == Insert:
-			aPrime = append(aPrime, RetainAction(1), a.Consume())
-			bPrime = append(bPrime, b.Consume(), RetainAction(1))
+			aPrime = append(aPrime, RetainAction(1))
+			bPrime = append(bPrime, b.Consume())
 
 		case a.PeekType() == Insert && b.PeekType() == Delete:
 			aPrime = append(aPrime, a.Consume())
@@ -240,9 +240,9 @@ TransformLoop:
 
 }
 
-// lengths calculates the lengths of the document op expects to be applied to
+// Lengths calculates the lengths of the document op expects to be applied to
 // and the length of that document after applying op.
-func lengths(op cooperate.Operation) (pre, post int) {
+func Lengths(op cooperate.Operation) (pre, post int) {
 	for _, a := range []cooperate.Action(op) {
 		switch a := a.(type) {
 		case RetainAction:
