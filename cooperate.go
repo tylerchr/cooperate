@@ -1,4 +1,4 @@
-// Package cooperate is a library for implementing Operational Transformation.
+// Package cooperate is an Operational Transformation library for real-time collaborative applications.
 package cooperate
 
 import (
